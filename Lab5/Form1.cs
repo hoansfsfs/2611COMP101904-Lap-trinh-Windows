@@ -1,36 +1,78 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CourseRegistrationApp
+namespace Lab5_Đăng_ký_khóa_học
 {
-    public partial class Form1 : Form
+    public partial class Dangkykhoahoc : Form
     {
-        private Dictionary<string, decimal> khoaHocHocPhi;
+        private decimal LayHocPhiCoBan()
+        {
+            string KhoaHoc = cboKhoaHoc.SelectedItem.ToString();
 
-        public Form1()
+            if (KhoaHoc == "C# WinForms cơ bản")
+            {
+                return 800000m;
+            }
+            if (KhoaHoc == "SQL Server cơ bản")
+            {
+                return 700000m;
+            }
+            if (KhoaHoc == "Web Frontend cơ bản")
+            {
+                return 750000m;
+            }
+            if (KhoaHoc == "Lập trình Python cơ bản")
+            {
+                return 650000m;
+            }
+            return 0m;
+        }
+
+        private decimal TinhTongTien()
+        {
+            return LayHocPhiCoBan() * numSoThang.Value + LayPhuPhiHinhThuc();
+        }
+
+        private decimal LayPhuPhiHinhThuc()
+        {
+            if (radTrucTiep.Checked)
+            {
+                return 100000m;
+            }
+            return 0m;
+        }
+
+        private void CapNhatHocPhi()
+        {
+            CultureInfo vi = new CultureInfo("vi-VN");
+
+            decimal hocPhiThang = LayHocPhiCoBan();
+            decimal tong = TinhTongTien();
+
+            lblHocPhi.Text = hocPhiThang.ToString("N0", vi) + " VND";
+            lblTien.Text = tong.ToString("N0", vi) + " VND";
+        }
+
+        public Dangkykhoahoc()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Dangkykhoahoc_Load(object sender, EventArgs e)
         {
-            khoaHocHocPhi = new Dictionary<string, decimal>()
-            {
-                { "C# WinForms cơ bản", 800000 },
-                { "SQL Server cơ bản", 700000 },
-                { "Web Frontend cơ bản", 750000 },
-                { "Lập trình Python cơ bản", 650000 }
-            };
-
-            cboKhoaHoc.Items.AddRange(new object[]
-            {
-                "C# WinForms cơ bản",
-                "SQL Server cơ bản",
-                "Web Frontend cơ bản",
-                "Lập trình Python cơ bản"
-            });
-
+            cboKhoaHoc.Items.Clear();
+            cboKhoaHoc.Items.Add("C# WinForms cơ bản");
+            cboKhoaHoc.Items.Add("SQL Server cơ bản");
+            cboKhoaHoc.Items.Add("Web Frontend cơ bản");
+            cboKhoaHoc.Items.Add("Lập trình Python cơ bản");
             cboKhoaHoc.SelectedIndex = 0;
 
             radOnline.Checked = true;
@@ -39,136 +81,147 @@ namespace CourseRegistrationApp
             numSoThang.Maximum = 12;
             numSoThang.Value = 1;
 
-            CapNhatTongTien();
+            lblDemKyTu.Text = "0/50";
+            DateTime today = DateTime.Today;
+            dtpNgaySinh.MaxDate = today;
+
+            chkNhanEmail.Checked = false;
+            lblNhanemail.Text = "Chưa đăng ký nhận email";
+
+            CapNhatHocPhi();
+            txtHoTen.Focus();
         }
 
-        private void CapNhatTongTien()
+        private void chkNhanEmail_CheckedChanged(object sender, EventArgs e)
         {
-            if (cboKhoaHoc.SelectedItem == null)
-                return;
-
-            string khoaHoc = cboKhoaHoc.SelectedItem.ToString();
-            decimal hocPhi = khoaHocHocPhi[khoaHoc];
-            decimal tongTien = hocPhi * numSoThang.Value;
-
-            lblTongTien.Text = tongTien.ToString("N0") + " VNĐ";
+            if (chkNhanEmail.Checked)
+            {
+                lblNhanemail.Text = "Đã đăng ký nhận email";
+            }
+            else
+            {
+                lblNhanemail.Text = "Chưa đăng ký nhận email";
+            }
         }
 
         private void cboKhoaHoc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CapNhatTongTien();
+            CapNhatHocPhi();
+        }
+
+        private void radOnline_CheckedChanged(object sender, EventArgs e)
+        {
+            CapNhatHocPhi();
+        }
+
+        private void radTrucTiep_CheckedChanged(object sender, EventArgs e)
+        {
+            CapNhatHocPhi();
         }
 
         private void numSoThang_ValueChanged(object sender, EventArgs e)
         {
-            CapNhatTongTien();
+            CapNhatHocPhi();
+        }
+
+        private void lblDemKyTu_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtHoTen_TextChanged(object sender, EventArgs e)
+        {
+            lblDemKyTu.Text = txtHoTen.Text.Length + "/50";
+        }
+
+        private void txtSoDienThoai_TextChanged(object sender, EventArgs e)
+        {}
+
+        private void txtSoDienThoai_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
 
         private void btnDangKy_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtHoTen.Text))
             {
-                MessageBox.Show(
-                    "Vui lòng nhập họ tên!",
-                    "Thông báo",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
+                MessageBox.Show("Vui lòng nhập họ tên.", "Thiếu thông tin",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtHoTen.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtSoDienThoai.Text))
             {
-                MessageBox.Show(
-                    "Vui lòng nhập số điện thoại!",
-                    "Thông báo",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập số điện thoại.", "Thiếu thông tin",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSoDienThoai.Focus();
+                return;
+            }
 
+            string sdt = txtSoDienThoai.Text.Trim();
+            bool chiLaSo = sdt.All(char.IsDigit);
+            if (!chiLaSo || sdt.Length != 10)
+            {
+                MessageBox.Show("Số điện thoại phải gồm đúng 10 chữ số!", "Sai định dạng",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtSoDienThoai.Focus();
                 return;
             }
 
             if (cboKhoaHoc.SelectedIndex < 0)
             {
-                MessageBox.Show(
-                    "Vui lòng chọn khóa học!",
-                    "Thông báo",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng chọn khóa học.", "Thiếu thông tin",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboKhoaHoc.Focus();
                 return;
             }
 
-            string hoTen = txtHoTen.Text.Trim();
-            string soDienThoai = txtSoDienThoai.Text.Trim();
-            string ngaySinh = dtpNgaySinh.Value.ToString("dd/MM/yyyy");
-            string khoaHoc = cboKhoaHoc.SelectedItem.ToString();
+            CultureInfo vi = new CultureInfo("vi-VN");
+            string hinhThuc = radOnline.Checked ? "Online" : "Trực tiếp";
+            string nhanEmail = chkNhanEmail.Checked ? "Có" : "Không";
+            string tongTien = TinhTongTien().ToString("N0", vi) + " VND";
 
-            string hinhThucHoc = radOnline.Checked
-                ? "Online"
-                : "Offline";
+            string phieu =
+                "Họ tên: " + txtHoTen.Text.Trim() + "\n" +
+                "Số điện thoại: " + txtSoDienThoai.Text.Trim() + "\n" +
+                "Ngày sinh: " + dtpNgaySinh.Value.ToString("dd/MM/yyyy") + "\n" +
+                "Khóa học: " + cboKhoaHoc.Text + "\n" +
+                "Hình thức học: " + hinhThuc + "\n" +
+                "Số tháng: " + numSoThang.Value + "\n" +
+                "Tổng tiền: " + tongTien + "\n" +
+                "Nhận email thông báo: " + nhanEmail;
 
-            int soThang = (int)numSoThang.Value;
-
-            decimal tongTien =
-                khoaHocHocPhi[khoaHoc] * soThang;
-
-            string nhanEmail =
-                chkNhanEmail.Checked
-                ? "Có"
-                : "Không";
-
-            string thongTin =
-                "PHIẾU ĐĂNG KÝ KHÓA HỌC\n\n" +
-                $"Họ tên: {hoTen}\n" +
-                $"Số điện thoại: {soDienThoai}\n" +
-                $"Ngày sinh: {ngaySinh}\n" +
-                $"Khóa học: {khoaHoc}\n" +
-                $"Hình thức học: {hinhThucHoc}\n" +
-                $"Số tháng: {soThang}\n" +
-                $"Tổng học phí: {tongTien:N0} VNĐ\n" +
-                $"Nhận email: {nhanEmail}";
-
-            MessageBox.Show(
-                thongTin,
-                "Kết quả đăng ký",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            MessageBox.Show(phieu, "Phiếu đăng ký", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             txtHoTen.Clear();
             txtSoDienThoai.Clear();
-
-            dtpNgaySinh.Value = DateTime.Now;
-
-            chkNhanEmail.Checked = false;
-
             cboKhoaHoc.SelectedIndex = 0;
-
             radOnline.Checked = true;
-
             numSoThang.Value = 1;
-
+            chkNhanEmail.Checked = false;
+            dtpNgaySinh.Value = DateTime.Today;
+            CapNhatHocPhi();
             txtHoTen.Focus();
-
-            CapNhatTongTien();
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                "Bạn có chắc chắn muốn thoát chương trình?",
-                "Xác nhận",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            DialogResult kq = MessageBox.Show("Bạn có chắc muốn thoát?", "Xác nhận thoát",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (result == DialogResult.Yes)
+            if (kq == DialogResult.Yes)
             {
-                Close();
+                this.Close();
             }
         }
     }
-}  
+}
