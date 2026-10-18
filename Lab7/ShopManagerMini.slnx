@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Solution>
+
+  <Folder Name="/Solution Items">
+  </Folder>
+
+  <Project
+      Path="ShopManagerMini\ShopManagerMini.csproj" />
+
+</Solution>
