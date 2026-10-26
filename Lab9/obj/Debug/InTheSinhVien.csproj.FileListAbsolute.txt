@@ -1,0 +1,10 @@
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.csproj.AssemblyReference.cache
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.FrmStudentCard.resources
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.Properties.Resources.resources
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.csproj.GenerateResource.cache
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\bin\Debug\InTheSinhVien.exe.config
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\bin\Debug\InTheSinhVien.exe
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\bin\Debug\InTheSinhVien.pdb
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.exe
+C:\Users\ADMIN\source\repos\InTheSinhVien\InTheSinhVien\obj\Debug\InTheSinhVien.pdb
